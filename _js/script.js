@@ -1,3 +1,5 @@
+
+
 class Despesa {
     constructor(ano, mes, dia, tipo, descricao, valor) {
         this._ano = ano;
@@ -7,7 +9,19 @@ class Despesa {
         this._descricao = descricao;
         this._valor = valor;
     }
+
+    validar() {
+        for (const i in this) {
+            if (this[i] == undefined || this[i] == null || this[i] == '') {
+                return false;
+            }
+        }
+        return true;
+    }
+
 }
+
+
 
 
 
@@ -30,7 +44,8 @@ class Bd {
     }
 }
 
-let bd = new Bd();
+
+
 
 
 
@@ -55,5 +70,14 @@ function cadastrar() {
         valor.value,
     )
 
-    bd.gravar(despesa);
+    const bd = new Bd();
+
+    if (despesa.validar()) {
+        bd.gravar(despesa);
+    } else {
+        alert('Não OK');
+    }
+
+    
+    
 }
