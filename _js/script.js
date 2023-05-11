@@ -9,22 +9,32 @@ class Despesa {
     }
 }
 
+
+
 class Bd {
-
     constructor() {
-
+        if (localStorage.getItem('id') == null) {
+            localStorage.setItem('id', 0);
+        }
     }
 
     getProximoId() {
-        let proximoId = localStorage.getItem('id');
+        return parseInt(localStorage.getItem('id')) + 1;
     }
 
+ 
     gravar(d) {
         //Adiciona o objeto despesa no localStorage
-        localStorage.setItem('despesa', JSON.stringify(d));
+        localStorage.setItem(this.getProximoId(), JSON.stringify(d));
+        localStorage.setItem('id', this.getProximoId());   
     }
-
 }
+
+let bd = new Bd();
+
+
+
+
 
 
 function cadastrar() {
@@ -45,6 +55,5 @@ function cadastrar() {
         valor.value,
     )
 
-    Bd.gravar(despesa);
-
+    bd.gravar(despesa);
 }
