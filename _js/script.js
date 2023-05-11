@@ -1,5 +1,5 @@
 
-
+//Classe com os atributos do formulário
 class Despesa {
     constructor(ano, mes, dia, tipo, descricao, valor) {
         this._ano = ano;
@@ -10,6 +10,7 @@ class Despesa {
         this._valor = valor;
     }
 
+    //Função para validar os campos do form, retorna false contendo qualquer campo undefined ou null ou vazio
     validar() {
         for (const i in this) {
             if (this[i] == undefined || this[i] == null || this[i] == '') {
@@ -24,7 +25,7 @@ class Despesa {
 
 
 
-
+//Classe de acesso ao localStorage
 class Bd {
     constructor() {
         if (localStorage.getItem('id') == null) {
@@ -36,11 +37,20 @@ class Bd {
         return parseInt(localStorage.getItem('id')) + 1;
     }
 
- 
+
     gravar(d) {
-        //Adiciona o objeto despesa no localStorage
-        localStorage.setItem(this.getProximoId(), JSON.stringify(d));
-        localStorage.setItem('id', this.getProximoId());   
+
+        try {
+            //Adiciona o objeto despesa no localStorage
+            localStorage.setItem(this.getProximoId(), JSON.stringify(d));
+            localStorage.setItem('id', this.getProximoId());
+
+            $('#sucessoGravacao').modal('show');
+
+        } catch (e) {
+            
+        }
+
     }
 }
 
@@ -75,9 +85,9 @@ function cadastrar() {
     if (despesa.validar()) {
         bd.gravar(despesa);
     } else {
-        alert('Não OK');
+        $('#errorGravacao').modal('show');
     }
 
-    
-    
+
+
 }
