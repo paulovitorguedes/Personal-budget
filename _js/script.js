@@ -9,6 +9,23 @@ class Despesa {
     }
 }
 
+class Bd {
+
+    constructor() {
+
+    }
+
+    getProximoId() {
+        let proximoId = localStorage.getItem('id');
+    }
+
+    gravar(d) {
+        //Adiciona o objeto despesa no localStorage
+        localStorage.setItem('despesa', JSON.stringify(d));
+    }
+
+}
+
 
 function cadastrar() {
     let ano = document.getElementById('ano');
@@ -28,5 +45,6 @@ function cadastrar() {
         valor.value,
     )
 
-    console.log(despesa);
+    Bd.gravar(despesa);
+
 }
