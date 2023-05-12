@@ -167,11 +167,12 @@ function setModal(valor) {
 
 
 
-function recuperarTodasDespesas() {
+function apresentarDespesas() {
 
     const despesas = bd.recuperarDespesas();
 
     let listaDespesas = document.getElementById('tabelaDespesas');
+    listaDespesas.innerHTML = '';
 
     despesas.forEach(despesa => {
 
@@ -205,7 +206,10 @@ function pesquisarDespesas() {
         valor: valor.value
     };
 
-
+    if (ano.value == '' && mes.value == '' && dia.value == '' && tipo.value == '' && descricao.value == '' && valor.value == '') {
+        apresentarDespesas()
+        return false;
+    }
 
     const despesaFiltrada = bd.pesquisar(despesa);
 
