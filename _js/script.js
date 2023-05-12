@@ -93,6 +93,12 @@ function cadastrar() {
 
     if (despesa.validar()) {
         bd.gravar(despesa);
+        ano.value = '';
+        mes.value = '';
+        dia.value = '';
+        tipo.value = '';
+        descricao.value = '';
+        valor.value = '';
     } else {
         setModal(1);
     }
@@ -127,38 +133,41 @@ function setModal(valor) {
 }
 
 
+
 function recuperarTodasDespesas() {
 
     const despesas = bd.recuperarDespesas();
-    let row = '';
-    let tipo = '';
+
+    let listaDespesas = document.getElementById('tableDespesas');
+
     despesas.forEach(despesa => {
         
         switch (parseInt(despesa._tipo)) {
             case 1:
-                tipo = 'Alimentação';
+                despesa._tipo = 'Alimentação';
                 break;
             case 2:
-                tipo = 'Educação';
+                despesa._tipo = 'Educação';
                 break;
             case 3:
-                tipo = 'Lazer';
+                despesa._tipo = 'Lazer';
                 break;
             case 4:
-                tipo = 'Saúde';
+                despesa._tipo = 'Saúde';
                 break;
             case 5:
-                tipo = 'Transporte';
+                despesa._tipo = 'Transporte';
                 break;
         }
 
-        row += `<tr>
-        <td> ${despesa._dia}/${despesa._mes}/${despesa._ano} </td>
-        <td> ${tipo} </td>
-        <td> ${despesa._descricao} </td>
-        <td> ${despesa._valor} </td>
-        </tr>`;
+        
+        let linha = listaDespesas.insertRow();
+        linha.insertCell(0).innerHTML = `${despesa._dia}/${despesa._mes}/${despesa._ano}`;
+        linha.insertCell(1).innerHTML = despesa._tipo;
+        linha.insertCell(2).innerHTML = despesa._descricao;
+        linha.insertCell(3).innerHTML = despesa._valor;
+
+        
     });
-    document.getElementById('tableDespesas').innerHTML = row;
-    // console.log(despesas);
+    
 }
