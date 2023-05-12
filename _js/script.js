@@ -52,6 +52,38 @@ class Bd {
         }
     }
 
+    pesquisar(d) {
+        let despesas = this.recuperarDespesas();
+
+        if (d.ano != '') {
+            despesas = despesas.filter(i => i._ano == d.ano);
+            // console.log(despesas);
+        }
+        if (d.mes != '') {
+            despesas = despesas.filter(i => i._mes == d.mes);
+            // console.log(despesas);
+        }
+        if (d.dia != '') {
+            despesas = despesas.filter(i => i._dia == d.dia);
+            // console.log(despesas);
+        }
+        if (d.tipo != '') {
+            despesas = despesas.filter(i => i._tipo == d.tipo);
+            // console.log(despesas);
+        }
+        if (d.descricao != '') {
+            despesas = despesas.filter(i => i._descricao == d.descricao);
+            // console.log(despesas);
+        }
+        if (d.valor != '') {
+            despesas = despesas.filter(i => i._valor == d.valor);
+            // console.log(despesas);
+        }
+
+        return despesas;
+    }
+
+
     recuperarDespesas() {
         let id = localStorage.getItem('id');
         const despesas = Array();
@@ -63,6 +95,7 @@ class Bd {
         }
         return despesas;
     }
+
 }
 const bd = new Bd();
 
@@ -138,36 +171,75 @@ function recuperarTodasDespesas() {
 
     const despesas = bd.recuperarDespesas();
 
-    let listaDespesas = document.getElementById('tableDespesas');
+    let listaDespesas = document.getElementById('tabelaDespesas');
 
     despesas.forEach(despesa => {
-        
-        switch (parseInt(despesa._tipo)) {
-            case 1:
-                despesa._tipo = 'Alimentação';
-                break;
-            case 2:
-                despesa._tipo = 'Educação';
-                break;
-            case 3:
-                despesa._tipo = 'Lazer';
-                break;
-            case 4:
-                despesa._tipo = 'Saúde';
-                break;
-            case 5:
-                despesa._tipo = 'Transporte';
-                break;
-        }
 
-        
+        despesa._tipo = recuperaTipo(despesa._tipo);
         let linha = listaDespesas.insertRow();
         linha.insertCell(0).innerHTML = `${despesa._dia}/${despesa._mes}/${despesa._ano}`;
         linha.insertCell(1).innerHTML = despesa._tipo;
         linha.insertCell(2).innerHTML = despesa._descricao;
         linha.insertCell(3).innerHTML = despesa._valor;
 
-        
     });
-    
+
+}
+
+
+
+function pesquisarDespesas() {
+    let ano = document.getElementById('ano');
+    let mes = document.getElementById('mes');
+    let dia = document.getElementById('dia');
+    let tipo = document.getElementById('tipo');
+    let descricao = document.getElementById('descricao');
+    let valor = document.getElementById('valor');
+
+    const despesa = {
+        ano: ano.value,
+        mes: mes.value,
+        dia: dia.value,
+        tipo: tipo.value,
+        descricao: descricao.value,
+        valor: valor.value
+    };
+
+
+
+    const despesaFiltrada = bd.pesquisar(despesa);
+
+    let listaDespesas = document.getElementById('tabelaDespesas');
+
+    if (despesaFiltrada.length > 0) {
+
+        despesaFiltrada.forEach(despesa => {
+            despesa._tipo = recuperaTipo(despesa._tipo);
+            // let linha = listaDespesas.insertRow();
+            // linha.insertCell(0).innerHTML = `${despesa.dia}/${despesa.mes}/${despesa.ano}`;
+            // linha.insertCell(1).innerHTML = despesa.tipo;
+            // linha.insertCell(2).innerHTML = despesa.descricao;
+            // linha.insertCell(3).innerHTML = despesa.valor;
+
+        });
+    }
+
+
+}
+
+
+function recuperaTipo(tipo) {
+
+    switch (parseInt(tipo)) {
+        case 1:
+            return 'Alimentação';
+        case 2:
+            return 'Educação';
+        case 3:
+            return 'Lazer';
+        case 4:
+            return 'Saúde';
+        case 5:
+            return 'Transporte';
+    }
 }
