@@ -50,10 +50,21 @@ class Bd {
         } catch (e) {
 
         }
+    }
 
+    recuperarDespesas() {
+        let id = localStorage.getItem('id');
+        const despesas = Array();
+        for (let i = 1; i <= id; i++) {
+            let despesa = localStorage.getItem(i);
+            if (despesa != null) {
+                despesas.push(JSON.parse(despesa));
+            }
+        }
+        return despesas;
     }
 }
-
+const bd = new Bd();
 
 
 
@@ -79,8 +90,6 @@ function cadastrar() {
         descricao.value,
         valor.value,
     )
-
-    const bd = new Bd();
 
     if (despesa.validar()) {
         bd.gravar(despesa);
@@ -115,4 +124,12 @@ function setModal(valor) {
             $('#modalRegistrandoDespesas').modal('show');
             break;
     }
+}
+
+
+function recuperarTodasDespesas() {
+
+    const despesas = bd.recuperarDespesas();
+
+    // console.log(despesas);
 }
