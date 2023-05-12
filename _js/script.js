@@ -130,6 +130,35 @@ function setModal(valor) {
 function recuperarTodasDespesas() {
 
     const despesas = bd.recuperarDespesas();
+    let row = '';
+    let tipo = '';
+    despesas.forEach(despesa => {
+        
+        switch (parseInt(despesa._tipo)) {
+            case 1:
+                tipo = 'Alimentação';
+                break;
+            case 2:
+                tipo = 'Educação';
+                break;
+            case 3:
+                tipo = 'Lazer';
+                break;
+            case 4:
+                tipo = 'Saúde';
+                break;
+            case 5:
+                tipo = 'Transporte';
+                break;
+        }
 
+        row += `<tr>
+        <td> ${despesa._dia}/${despesa._mes}/${despesa._ano} </td>
+        <td> ${tipo} </td>
+        <td> ${despesa._descricao} </td>
+        <td> ${despesa._valor} </td>
+        </tr>`;
+    });
+    document.getElementById('tableDespesas').innerHTML = row;
     // console.log(despesas);
 }
