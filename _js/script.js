@@ -45,10 +45,10 @@ class Bd {
             localStorage.setItem(this.getProximoId(), JSON.stringify(d));
             localStorage.setItem('id', this.getProximoId());
 
-            $('#sucessoGravacao').modal('show');
+            setModal(2);
 
         } catch (e) {
-            
+
         }
 
     }
@@ -85,9 +85,34 @@ function cadastrar() {
     if (despesa.validar()) {
         bd.gravar(despesa);
     } else {
-        $('#errorGravacao').modal('show');
+        setModal(1);
     }
+}
 
 
 
+
+function setModal(valor) {
+    //caso 1 = Danger
+    //CAso 2 = Sucesso
+    let buton = document.getElementById('modal-btn');
+    switch (valor) {
+        case 1:
+            document.getElementById('modal-h').className = 'modal-header text-danger';
+            document.getElementById('exampleModalLabel').innerHTML = 'Erro de Cadastro';
+            document.getElementById('modal-b').innerHTML = 'Existem campos obigatrios que não foram inseridos corretamente';
+            buton.innerHTML = 'Voltar e Corrigir';
+            buton.className = 'btn btn-danger';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+
+        case 2:
+            document.getElementById('modal-h').className = 'modal-header text-success';
+            document.getElementById('exampleModalLabel').innerHTML = 'Cadastrado com Sucesso';
+            document.getElementById('modal-b').innerHTML = 'A despesa foi cadastrada com sucesso!';
+            buton.innerHTML = 'Sair';
+            buton.className = 'btn btn-success';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+    }
 }
