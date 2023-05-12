@@ -142,7 +142,7 @@ function cadastrar() {
 
 function setModal(valor) {
     //caso 1 = Danger
-    //CAso 2 = Sucesso
+    //Caso 2 = Sucesso
     let buton = document.getElementById('modal-btn');
     switch (valor) {
         case 1:
@@ -213,13 +213,14 @@ function pesquisarDespesas() {
 
     if (despesaFiltrada.length > 0) {
 
+        listaDespesas.innerHTML = '';
         despesaFiltrada.forEach(despesa => {
             despesa._tipo = recuperaTipo(despesa._tipo);
-            // let linha = listaDespesas.insertRow();
-            // linha.insertCell(0).innerHTML = `${despesa.dia}/${despesa.mes}/${despesa.ano}`;
-            // linha.insertCell(1).innerHTML = despesa.tipo;
-            // linha.insertCell(2).innerHTML = despesa.descricao;
-            // linha.insertCell(3).innerHTML = despesa.valor;
+            let linha = listaDespesas.insertRow();
+            linha.insertCell(0).innerHTML = `${despesa._dia}/${despesa._mes}/${despesa._ano}`;
+            linha.insertCell(1).innerHTML = despesa._tipo;
+            linha.insertCell(2).innerHTML = despesa._descricao;
+            linha.insertCell(3).innerHTML = despesa._valor;
 
         });
     }
