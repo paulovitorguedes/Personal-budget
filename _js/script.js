@@ -50,7 +50,7 @@ class Bd {
 
             setModal(2);
 
-        } catch (e) {
+        } catch (error) {
 
         }
     }
@@ -104,7 +104,14 @@ class Bd {
 
 
     excluir(id) {
-        localStorage.removeItem(id);
+        try {
+            localStorage.removeItem(id);
+            return true;
+
+        } catch (error) {
+            return false;
+        }
+
     }
 
 }
@@ -161,7 +168,11 @@ function cadastrarDespesas() {
 
 
 function removerDespesas(id) {
-    bd.excluir(id);
+    if (bd.excluir(id)) {
+        // window.location.reload();
+        apresentarDespesas()
+        setModal(4);
+    }
 }
 
 
@@ -287,6 +298,14 @@ function setModal(valor) {
             document.getElementById('modal-b').innerHTML = 'Nenhuma resultado foi encontrado com os dados inseridos';
             buton.innerHTML = 'Voltar e Corrigir';
             buton.className = 'btn btn-danger';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+        case 4:
+            document.getElementById('modal-h').className = 'modal-header text-success';
+            document.getElementById('exampleModalLabel').innerHTML = 'Despesa Excluida';
+            document.getElementById('modal-b').innerHTML = 'Despesa selecionada foi excluida com sucesso';
+            buton.innerHTML = 'Sair';
+            buton.className = 'btn btn-success';
             $('#modalRegistrandoDespesas').modal('show');
             break;
     }
