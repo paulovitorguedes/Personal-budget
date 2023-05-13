@@ -144,6 +144,7 @@ function setModal(valor) {
     //caso 1 = Danger
     //Caso 2 = Sucesso
     let buton = document.getElementById('modal-btn');
+    // console.log(valor);
     switch (valor) {
         case 1:
             document.getElementById('modal-h').className = 'modal-header text-danger';
@@ -162,30 +163,53 @@ function setModal(valor) {
             buton.className = 'btn btn-success';
             $('#modalRegistrandoDespesas').modal('show');
             break;
+
+        case 3:
+            document.getElementById('modal-h').className = 'modal-header text-danger';
+            document.getElementById('exampleModalLabel').innerHTML = 'Pesquisa não concluída';
+            document.getElementById('modal-b').innerHTML = 'Nenhuma resultado foi encontrado com os dados inseridos';
+            buton.innerHTML = 'Voltar e Corrigir';
+            buton.className = 'btn btn-danger';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
     }
 }
 
 
+//Na chamada da função sem parametros, a função deve apresentar na tabela todos os dados cadastrados
+//Na chamada da função com parametro, a função deve apresentar na tabela os dados do Array de objetos recebido no param
+function apresentarDespesas(param = Array()) {
 
-function apresentarDespesas() {
+    let despesas = Array();
+    if (param.length > 0) { //para as chamadas da função com parametro
+        despesas = param;
+    } else { //para as chamadas da função sem parametro
+        despesas = bd.recuperarDespesas();
+    }
+    //Recebe um Array de objetos onde cada ogjeto equivale a uma despesa
 
-    const despesas = bd.recuperarDespesas();
 
-    let listaDespesas = document.getElementById('tabelaDespesas');
-    listaDespesas.innerHTML = '';
+
+    //Reecebe o DOM do tbody para pabela de apresentação das despesas
+    let tebelaDespesas = document.getElementById('tabelaDespesas');
+    tebelaDespesas.innerHTML = '';
 
     despesas.forEach(despesa => {
 
         despesa._tipo = recuperaTipo(despesa._tipo);
-        let linha = listaDespesas.insertRow();
+        let linha = tebelaDespesas.insertRow();
         linha.insertCell(0).innerHTML = `${despesa._dia}/${despesa._mes}/${despesa._ano}`;
         linha.insertCell(1).innerHTML = despesa._tipo;
         linha.insertCell(2).innerHTML = despesa._descricao;
         linha.insertCell(3).innerHTML = despesa._valor;
 
     });
-
 }
+
+
+
+
+
 
 
 
@@ -206,31 +230,22 @@ function pesquisarDespesas() {
         valor: valor.value
     };
 
+
     if (ano.value == '' && mes.value == '' && dia.value == '' && tipo.value == '' && descricao.value == '' && valor.value == '') {
-        apresentarDespesas()
-        return false;
+        apresentarDespesas(); //Para apresentação de todas as despesas caso realize a pesquisa com todos os campos vazios
+
+    } else {
+        //Se despesaFiltrada conter resultados, será apresentado na tabela
+        const despesaFiltrada = bd.pesquisar(despesa);
+        if (despesaFiltrada.length > 0) {
+            apresentarDespesas(despesaFiltrada);
+        } else {
+            setModal(3);
+        }
     }
-
-    const despesaFiltrada = bd.pesquisar(despesa);
-
-    let listaDespesas = document.getElementById('tabelaDespesas');
-
-    if (despesaFiltrada.length > 0) {
-
-        listaDespesas.innerHTML = '';
-        despesaFiltrada.forEach(despesa => {
-            despesa._tipo = recuperaTipo(despesa._tipo);
-            let linha = listaDespesas.insertRow();
-            linha.insertCell(0).innerHTML = `${despesa._dia}/${despesa._mes}/${despesa._ano}`;
-            linha.insertCell(1).innerHTML = despesa._tipo;
-            linha.insertCell(2).innerHTML = despesa._descricao;
-            linha.insertCell(3).innerHTML = despesa._valor;
-
-        });
-    }
-
-
 }
+
+
 
 
 function recuperaTipo(tipo) {
