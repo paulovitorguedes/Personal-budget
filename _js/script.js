@@ -25,6 +25,9 @@ class Despesa {
 
 
 
+
+
+
 //Classe de acesso ao localStorage
 class Bd {
     constructor() {
@@ -53,7 +56,7 @@ class Bd {
     }
 
     pesquisar(d) {
-        let despesas = this.recuperarDespesas();
+        let despesas = this.buscar();
 
         if (d.ano != '') {
             despesas = despesas.filter(i => i._ano == d.ano);
@@ -84,16 +87,24 @@ class Bd {
     }
 
 
-    recuperarDespesas() {
+    buscar() {
         let id = localStorage.getItem('id');
         const despesas = Array();
         for (let i = 1; i <= id; i++) {
             let despesa = localStorage.getItem(i);
             if (despesa != null) {
-                despesas.push(JSON.parse(despesa));
+                despesa = JSON.parse(despesa);
+                despesa._id = i;//insere o atributo id ao objeto
+                despesas.push(despesa);
+                // console.log(despesa);
             }
         }
         return despesas;
+    }
+
+
+    excluir(id) {
+        localStorage.removeItem(id);
     }
 
 }
@@ -106,7 +117,10 @@ const bd = new Bd();
 
 
 
-function cadastrar() {
+
+
+
+function cadastrarDespesas() {
     let ano = document.getElementById('ano');
     let mes = document.getElementById('mes');
     let dia = document.getElementById('dia');
@@ -140,40 +154,23 @@ function cadastrar() {
 
 
 
-function setModal(valor) {
-    //caso 1 = Danger
-    //Caso 2 = Sucesso
-    let buton = document.getElementById('modal-btn');
-    // console.log(valor);
-    switch (valor) {
-        case 1:
-            document.getElementById('modal-h').className = 'modal-header text-danger';
-            document.getElementById('exampleModalLabel').innerHTML = 'Erro de Cadastro';
-            document.getElementById('modal-b').innerHTML = 'Existem campos obigatrios que não foram inseridos corretamente';
-            buton.innerHTML = 'Voltar e Corrigir';
-            buton.className = 'btn btn-danger';
-            $('#modalRegistrandoDespesas').modal('show');
-            break;
 
-        case 2:
-            document.getElementById('modal-h').className = 'modal-header text-success';
-            document.getElementById('exampleModalLabel').innerHTML = 'Cadastrado com Sucesso';
-            document.getElementById('modal-b').innerHTML = 'A despesa foi cadastrada com sucesso!';
-            buton.innerHTML = 'Sair';
-            buton.className = 'btn btn-success';
-            $('#modalRegistrandoDespesas').modal('show');
-            break;
 
-        case 3:
-            document.getElementById('modal-h').className = 'modal-header text-danger';
-            document.getElementById('exampleModalLabel').innerHTML = 'Pesquisa não concluída';
-            document.getElementById('modal-b').innerHTML = 'Nenhuma resultado foi encontrado com os dados inseridos';
-            buton.innerHTML = 'Voltar e Corrigir';
-            buton.className = 'btn btn-danger';
-            $('#modalRegistrandoDespesas').modal('show');
-            break;
-    }
+
+
+
+
+function removerDespesas(id) {
+    bd.excluir(id);
 }
+
+
+
+
+
+
+
+
 
 
 //Na chamada da função sem parametros, a função deve apresentar na tabela todos os dados cadastrados
@@ -184,7 +181,7 @@ function apresentarDespesas(param = Array()) {
     if (param.length > 0) { //para as chamadas da função com parametro
         despesas = param;
     } else { //para as chamadas da função sem parametro
-        despesas = bd.recuperarDespesas();
+        despesas = bd.buscar();
     }
     //Recebe um Array de objetos onde cada ogjeto equivale a uma despesa
 
@@ -202,6 +199,13 @@ function apresentarDespesas(param = Array()) {
         linha.insertCell(1).innerHTML = despesa._tipo;
         linha.insertCell(2).innerHTML = despesa._descricao;
         linha.insertCell(3).innerHTML = despesa._valor;
+
+        let btn = document.createElement('button');
+        btn.className = 'btn btn-danger';
+        btn.id = despesa._id;
+        btn.innerHTML = '<i class="fas fa-times"></i>';
+        btn.onclick = function () { removerDespesas(despesa._id) };
+        linha.insertCell(4).append(btn);
 
     });
 }
@@ -244,6 +248,52 @@ function pesquisarDespesas() {
         }
     }
 }
+
+
+
+
+
+
+
+
+function setModal(valor) {
+    //caso 1 = Falha de cadastro
+    //Caso 2 = Sucesso de cadastro
+    //caso 3 = Falha de pesquisa
+    let buton = document.getElementById('modal-btn');
+    // console.log(valor);
+    switch (valor) {
+        case 1:
+            document.getElementById('modal-h').className = 'modal-header text-danger';
+            document.getElementById('exampleModalLabel').innerHTML = 'Erro de Cadastro';
+            document.getElementById('modal-b').innerHTML = 'Existem campos obigatrios que não foram inseridos corretamente';
+            buton.innerHTML = 'Voltar e Corrigir';
+            buton.className = 'btn btn-danger';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+
+        case 2:
+            document.getElementById('modal-h').className = 'modal-header text-success';
+            document.getElementById('exampleModalLabel').innerHTML = 'Cadastrado com Sucesso';
+            document.getElementById('modal-b').innerHTML = 'A despesa foi cadastrada com sucesso!';
+            buton.innerHTML = 'Sair';
+            buton.className = 'btn btn-success';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+
+        case 3:
+            document.getElementById('modal-h').className = 'modal-header text-danger';
+            document.getElementById('exampleModalLabel').innerHTML = 'Pesquisa não concluída';
+            document.getElementById('modal-b').innerHTML = 'Nenhuma resultado foi encontrado com os dados inseridos';
+            buton.innerHTML = 'Voltar e Corrigir';
+            buton.className = 'btn btn-danger';
+            $('#modalRegistrandoDespesas').modal('show');
+            break;
+    }
+}
+
+
+
 
 
 
